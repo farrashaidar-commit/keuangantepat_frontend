@@ -39,9 +39,14 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (credentials) => {
     set({ isLoading: true, error: null, validationErrors: {} });
     try {
+      const payload = new URLSearchParams();
+      Object.entries(credentials).forEach(([key, value]) => {
+        payload.append(key, String(value));
+      });
+
       const res = await apiFetch('/login', {
         method: 'POST',
-        body: JSON.stringify(credentials)
+        body: payload,
       });
       localStorage.setItem('kupat_token', res.data.token);
       set({ user: res.data.user, token: res.data.token, isAuthenticated: true, isLoading: false });
@@ -53,9 +58,14 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (data) => {
     set({ isLoading: true, error: null, validationErrors: {} });
     try {
+      const payload = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        payload.append(key, String(value));
+      });
+
       const res = await apiFetch('/register', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: payload,
       });
       localStorage.setItem('kupat_token', res.data.token);
       set({ user: res.data.user, token: res.data.token, isAuthenticated: true, isLoading: false });

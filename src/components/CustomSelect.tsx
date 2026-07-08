@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, type MouseEvent as ReactMouseEvent } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

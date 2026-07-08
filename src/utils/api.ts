@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
 
 function buildUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -17,8 +17,14 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  if (options.body && !headers.has('Content-Type') && !(options.body instanceof FormData)) {
-    headers.set('Content-Type', 'application/json');
+  if (options.body && !headers.has('Content-Type')) {
+    if (options.body instanceof FormData) {
+      // let the browser set the boundary for multipart uploads
+    } else if (options.body instanceof URLSearchParams) {
+      headers.set('Content-Type', 'application/x-www-form-urlencoded');
+    } else {
+      headers.set('Content-Type', 'application/json');
+    }
   }
 
   const response = await fetch(buildUrl(path), {
